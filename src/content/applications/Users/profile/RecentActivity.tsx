@@ -1,17 +1,29 @@
+import { useQuery } from '@apollo/client';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import TimerIcon from '@mui/icons-material/Timer';
+import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import {
+  Avatar,
   Box,
-  Typography,
   Card,
   CardHeader,
   Divider,
-  Avatar,
+  IconButton,
+  Typography,
   useTheme
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import ShoppingBagTwoToneIcon from '@mui/icons-material/ShoppingBagTwoTone';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import StarTwoToneIcon from '@mui/icons-material/StarTwoTone';
+import dayjs from 'dayjs';
+import { FC, useState } from 'react';
+import Countdown from 'react-countdown';
+import { IApp, IAppRes } from 'src/graphql/app/createApp';
+import { APP_DOCUMENT, IAppReq } from 'src/graphql/app/getApp';
+import {
+  IMyProgressRes,
+  MY_PROGRESS_DOCUMENT
+} from 'src/graphql/progress/myProgress';
+import { IUserProps } from 'src/models/userModel';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -22,9 +34,55 @@ const AvatarPrimary = styled(Avatar)(
 `
 );
 
-function RecentActivity() {
+const StyleCountDown = styled(Countdown)(
+  () => `
+    font-size: 1.5rem;
+  `
+);
 
+const ButtonUploadWrapper = styled(Box)(
+  ({ theme }) => `
+    .MuiIconButton-root {
+      border-radius: 100%;
+      background: ${theme.colors.primary.main};
+      color: ${theme.palette.primary.contrastText};
+      box-shadow: ${theme.colors.shadows.primary};
+      width: ${theme.spacing(4)};
+      height: ${theme.spacing(4)};
+      padding: 0;
+  
+      &:hover {
+        background: ${theme.colors.primary.dark};
+      }
+    }
+`
+);
+
+const RecentActivity: FC<IUserProps> = ({ user }) => {
   const theme = useTheme();
+
+  const [app, setApp] = useState<IApp>({
+    endDate: dayjs().add(1, 'year').toDate(),
+    eventName: '',
+    goalKm: 0,
+    startDate: null
+  });
+
+  const [progress, setProgress] = useState(0);
+
+  // TODO: change event key to ENV
+  useQuery<IAppRes, IAppReq>(APP_DOCUMENT, {
+    variables: { eventKey: 'run' },
+    onCompleted: (res) => {
+      setApp(res.app);
+    }
+  });
+
+  useQuery<IMyProgressRes>(MY_PROGRESS_DOCUMENT, {
+    onCompleted: (res) => {
+      setProgress(parseFloat(res?.myProgress?.km) || 0);
+    }
+  });
 
   return (
     <Card>
@@ -32,10 +90,18 @@ function RecentActivity() {
       <Divider />
       <Box px={2} py={4} display="flex" alignItems="flex-start">
         <AvatarPrimary>
-          <ShoppingBagTwoToneIcon />
+          <DirectionsRunIcon />
         </AvatarPrimary>
         <Box pl={2} flex={1}>
-          <Typography variant="h3">Orders</Typography>
+          <Box
+            display={'flex'}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+          >
+            <Typography variant="h3" style={{ display: 'inline' }}>
+              Progress (km)
+            </Typography>
+          </Box>
 
           <Box pt={2} display="flex">
             <Box pr={8}>
@@ -46,7 +112,7 @@ function RecentActivity() {
               >
                 Total
               </Typography>
-              <Typography variant="h2">485</Typography>
+              <Typography variant="h2">{user.km}</Typography>
             </Box>
             <Box>
               <Typography
@@ -54,9 +120,9 @@ function RecentActivity() {
                 variant="caption"
                 sx={{ fontSize: `${theme.typography.pxToRem(16)}` }}
               >
-                Failed
+                remaining
               </Typography>
-              <Typography variant="h2">8</Typography>
+              <Typography variant="h2">{app.goalKm}</Typography>
             </Box>
           </Box>
         </Box>
@@ -64,31 +130,14 @@ function RecentActivity() {
       <Divider />
       <Box px={2} py={4} display="flex" alignItems="flex-start">
         <AvatarPrimary>
-          <FavoriteTwoToneIcon />
+          <MilitaryTechIcon />
         </AvatarPrimary>
         <Box pl={2} flex={1}>
-          <Typography variant="h3">Favourites</Typography>
+          <Typography variant="h3">Ranking</Typography>
 
           <Box pt={2} display="flex">
-            <Box pr={8}>
-              <Typography
-                gutterBottom
-                variant="caption"
-                sx={{ fontSize: `${theme.typography.pxToRem(16)}` }}
-              >
-                Products
-              </Typography>
-              <Typography variant="h2">64</Typography>
-            </Box>
             <Box>
-              <Typography
-                gutterBottom
-                variant="caption"
-                sx={{ fontSize: `${theme.typography.pxToRem(16)}` }}
-              >
-                Lists
-              </Typography>
-              <Typography variant="h2">15</Typography>
+              <Typography variant="h1">{progress}</Typography>
             </Box>
           </Box>
         </Box>
@@ -96,37 +145,18 @@ function RecentActivity() {
       <Divider />
       <Box px={2} py={4} display="flex" alignItems="flex-start">
         <AvatarPrimary>
-          <StarTwoToneIcon />
+          <TimerIcon />
         </AvatarPrimary>
         <Box pl={2} flex={1}>
-          <Typography variant="h3">Reviews</Typography>
+          <Typography variant="h3">Time Left</Typography>
 
           <Box pt={2} display="flex">
-            <Box pr={8}>
-              <Typography
-                gutterBottom
-                variant="caption"
-                sx={{ fontSize: `${theme.typography.pxToRem(16)}` }}
-              >
-                Total
-              </Typography>
-              <Typography variant="h2">654</Typography>
-            </Box>
-            <Box>
-              <Typography
-                gutterBottom
-                variant="caption"
-                sx={{ fontSize: `${theme.typography.pxToRem(16)}` }}
-              >
-                Useful
-              </Typography>
-              <Typography variant="h2">21</Typography>
-            </Box>
+            <StyleCountDown date={app.endDate} />
           </Box>
         </Box>
       </Box>
     </Card>
   );
-}
+};
 
 export default RecentActivity;

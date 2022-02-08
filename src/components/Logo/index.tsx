@@ -23,7 +23,7 @@ const LogoSignWrapper = styled(Box)(
 
 const LogoSign = styled(Box)(
   ({ theme }) => `
-        background: ${theme.general.reactFrameworkColor};
+        // background: ${theme.general.reactFrameworkColor};
         width: 18px;
         height: 18px;
         border-radius: ${theme.general.borderRadiusSm};
@@ -32,29 +32,29 @@ const LogoSign = styled(Box)(
         top: 3px;
         left: 17px;
 
-        &:after, 
-        &:before {
-            content: "";
-            display: block;
-            width: 18px;
-            height: 18px;
-            position: absolute;
-            top: -1px;
-            right: -20px;
-            transform: rotate(0deg);
-            border-radius: ${theme.general.borderRadiusSm};
-        }
+        // &:after, 
+        // &:before {
+        //     content: "";
+        //     display: block;
+        //     width: 18px;
+        //     height: 18px;
+        //     position: absolute;
+        //     top: -1px;
+        //     right: -20px;
+        //     transform: rotate(0deg);
+        //     border-radius: ${theme.general.borderRadiusSm};
+        // }
 
-        &:before {
-            background: ${theme.palette.primary.main};
-            right: auto;
-            left: 0;
-            top: 20px;
-        }
+        // &:before {
+        //     background: ${theme.palette.primary.main};
+        //     right: auto;
+        //     left: 0;
+        //     top: 20px;
+        // }
 
-        &:after {
-            background: ${theme.palette.secondary.main};
-        }
+        // &:after {
+        //     background: ${theme.palette.secondary.main};
+        // }
 `
 );
 
@@ -67,7 +67,7 @@ const LogoSignInner = styled(Box)(
         left: 12px;
         z-index: 5;
         border-radius: ${theme.general.borderRadiusSm};
-        background: ${theme.header.background};
+        background-image: "/static/images/logo/huso_logo.png";
 `
 );
 
@@ -98,21 +98,22 @@ const LogoText = styled(Box)(
 );
 
 function Logo() {
-
-
   return (
-    <LogoWrapper to="/overview">
+    <LogoWrapper to="/profile">
       <LogoSignWrapper>
-        <LogoSign>
-          <LogoSignInner />
-        </LogoSign>
+        <img
+          src="/static/images/logo/huso_logo.png"
+          alt=""
+          width={'64px'}
+          height={'64px'}
+        />
       </LogoSignWrapper>
       <Hidden smDown>
         <LogoTextWrapper>
           <Tooltip title="Version 1.1.0" arrow placement="right">
-            <VersionBadge>1.1</VersionBadge>
+            <VersionBadge>2021</VersionBadge>
           </Tooltip>
-          <LogoText>Tokyo Free White</LogoText>
+          <LogoText>HUSO RMUTTO RUN</LogoText>
         </LogoTextWrapper>
       </Hidden>
     </LogoWrapper>

@@ -125,7 +125,7 @@ function Status500() {
                     High performance React template built with lots of powerful Material-UI components across multiple product niches for fast &amp; perfect apps development processes.
                   </TypographySecondary>
                   <Button
-                    href="/overview"
+                    href="/profile"
                     size="large"
                     variant="contained"
                   >

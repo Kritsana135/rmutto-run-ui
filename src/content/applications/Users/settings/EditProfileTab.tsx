@@ -1,20 +1,65 @@
-import {
-  Grid,
-  Typography,
-  CardContent,
-  Card,
-  Box,
-  Divider,
-  Button
-} from '@mui/material';
-
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DoneTwoToneIcon from '@mui/icons-material/DoneTwoTone';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  TextField,
+  Typography
+} from '@mui/material';
+import { FC, useState, useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import Text from 'src/components/Text';
-import Label from 'src/components/Label';
+import CheckIcon from '@mui/icons-material/Check';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  IUpdateMeReq,
+  UPDATE_PROFILE_DOCUMENT
+} from 'src/graphql/profile/updateMe';
+import { IProfile } from 'src/graphql/profile';
+import { ProfileRes, PROFILE_DOCUMENT } from 'src/graphql/profile/me';
+import _ from 'loadsh';
+
+const defaultProfile: IProfile = {
+  firstName: '',
+  lastName: '',
+  phoneNumber: '',
+  address: '',
+  bio: ''
+};
 
 function EditProfileTab() {
+  const [SaveMe] = useMutation<any, IUpdateMeReq>(UPDATE_PROFILE_DOCUMENT);
 
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset
+  } = useForm<IProfile>({ defaultValues: defaultProfile });
+  const [edit, setEdit] = useState(false);
+
+  useQuery<ProfileRes>(PROFILE_DOCUMENT, {
+    onCompleted: (data: ProfileRes) => {
+      if (data?.me) {
+        reset(data?.me);
+      }
+    }
+  });
+
+  const handleEdit = () => {
+    setEdit(!edit);
+  };
+
+  const saveMe = (input: IProfile) => {
+    handleEdit();
+    const newInput = _.omit(input, ['__typename', 'id', 'email']);
+    SaveMe({
+      variables: { input: newInput }
+    });
+  };
 
   return (
     <Grid container spacing={3}>
@@ -34,9 +79,23 @@ function EditProfileTab() {
                 Manage informations related to your personal details
               </Typography>
             </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
+            {edit ? (
+              <Button
+                variant="contained"
+                startIcon={<CheckIcon />}
+                onClick={handleSubmit(saveMe)}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                variant="text"
+                startIcon={<EditTwoToneIcon />}
+                onClick={handleEdit}
+              >
+                Edit
+              </Button>
+            )}
           </Box>
           <Divider />
           <CardContent sx={{ p: 4 }}>
@@ -44,23 +103,68 @@ function EditProfileTab() {
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Name:
+                    First Name:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>Craig Donin</b>
-                  </Text>
+                  <Controller
+                    render={({ field }) => (
+                      <EditAbleWrapper value={field.value} edit={edit}>
+                        <TextField
+                          {...field}
+                          variant="standard"
+                          type="string"
+                          error={!!errors.firstName}
+                          helperText={errors.firstName?.message}
+                          inputProps={{
+                            maxLength: 30
+                          }}
+                        />
+                      </EditAbleWrapper>
+                    )}
+                    name="firstName"
+                    control={control}
+                    rules={{
+                      ...defaultRule,
+                      minLength: {
+                        value: 2,
+                        message: 'ชื่อต้องมีความยาวตั้งแต่ 2 ตัวอักษรขึ้นไป'
+                      }
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Date of birth:
+                    Last Name:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>15 March 1977</b>
-                  </Text>
+                  <Controller
+                    render={({ field }) => (
+                      <EditAbleWrapper value={field.value} edit={edit}>
+                        <TextField
+                          {...field}
+                          type="string"
+                          variant="standard"
+                          style={{ marginTop: 9 }}
+                          error={!!errors.lastName}
+                          helperText={errors.lastName?.message}
+                          inputProps={{
+                            maxLength: 30
+                          }}
+                        />
+                      </EditAbleWrapper>
+                    )}
+                    name="lastName"
+                    control={control}
+                    rules={{
+                      ...defaultRule,
+                      minLength: {
+                        value: 2,
+                        message: 'นามสกุลต้องมีความยาวตั้งแต่ 2 ตัวอักษรขึ้นไป'
+                      }
+                    }}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
@@ -69,123 +173,86 @@ function EditProfileTab() {
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
                   <Box sx={{ maxWidth: { xs: 'auto', sm: 300 } }}>
-                    <Text color="black">
-                      1749 High Meadow Lane, SEQUOIA NATIONAL PARK, California,
-                      93262
-                    </Text>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <Box
-            p={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Typography variant="h4" gutterBottom>
-                Account Settings
-              </Typography>
-              <Typography variant="subtitle2">
-                Manage details related to your account
-              </Typography>
-            </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
-          </Box>
-          <Divider />
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="subtitle2">
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Language:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>English (US)</b>
-                  </Text>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Timezone:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>GMT +2</b>
-                  </Text>
-                </Grid>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Account status:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Label color="success">
-                    <DoneTwoToneIcon fontSize="small" />
-                    <b>Active</b>
-                  </Label>
-                </Grid>
-              </Grid>
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <Box
-            p={3}
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Box>
-              <Typography variant="h4" gutterBottom>
-                Email Addresses
-              </Typography>
-              <Typography variant="subtitle2">
-                Manage details related to your associated email addresses
-              </Typography>
-            </Box>
-            <Button variant="text" startIcon={<EditTwoToneIcon />}>
-              Edit
-            </Button>
-          </Box>
-          <Divider />
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="subtitle2">
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
-                  <Box pr={3} pb={2}>
-                    Email ID:
-                  </Box>
-                </Grid>
-                <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>example@demo.com</b>
-                  </Text>
-                  <Box pl={1} component="span">
-                    <Label color="success">Primary</Label>
+                    <Controller
+                      render={({ field }) => (
+                        <EditAbleWrapper value={field.value} edit={edit}>
+                          <TextField
+                            {...field}
+                            type="string"
+                            variant="standard"
+                            style={{ marginTop: 9 }}
+                            error={!!errors.address}
+                            fullWidth
+                            helperText={errors.address?.message}
+                          />
+                        </EditAbleWrapper>
+                      )}
+                      name="address"
+                      control={control}
+                      rules={defaultRule}
+                    />
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
                   <Box pr={3} pb={2}>
-                    Email ID:
+                    Phone Number:
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={8} md={9}>
-                  <Text color="black">
-                    <b>demo@example.com</b>
-                  </Text>
+                  <Controller
+                    render={({ field }) => (
+                      <EditAbleWrapper value={field.value} edit={edit}>
+                        <TextField
+                          {...field}
+                          type="string"
+                          variant="standard"
+                          style={{ marginTop: 9 }}
+                          error={!!errors.phoneNumber}
+                          helperText={errors.phoneNumber?.message}
+                          inputProps={{
+                            maxLength: 15
+                          }}
+                        />
+                      </EditAbleWrapper>
+                    )}
+                    name="phoneNumber"
+                    control={control}
+                    rules={{
+                      ...defaultRule,
+                      minLength: {
+                        value: 9,
+                        message:
+                          'เบอร์โทรศัพท์ต้องมีความยาวตั้งแต่ 9 ตัวอักษรขึ้นไป'
+                      }
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={4} md={3} textAlign={{ sm: 'right' }}>
+                  <Box pr={3} pb={2}>
+                    Bio:
+                  </Box>
+                </Grid>
+                <Grid item xs={12} sm={8} md={9}>
+                  <Box sx={{ maxWidth: { xs: 'auto', sm: 300 } }}>
+                    <Controller
+                      render={({ field }) => (
+                        <EditAbleWrapper value={field.value} edit={edit}>
+                          <TextField
+                            {...field}
+                            type="string"
+                            variant="standard"
+                            style={{ marginTop: 9 }}
+                            error={!!errors.bio}
+                            fullWidth
+                            helperText={errors.bio?.message}
+                          />
+                        </EditAbleWrapper>
+                      )}
+                      name="bio"
+                      control={control}
+                      rules={defaultRule}
+                    />
+                  </Box>
                 </Grid>
               </Grid>
             </Typography>
@@ -195,5 +262,22 @@ function EditProfileTab() {
     </Grid>
   );
 }
+
+interface IEditableProps {
+  edit: boolean;
+  value: string;
+}
+
+const EditAbleWrapper: FC<IEditableProps> = ({ value, edit, children }) => {
+  if (edit) {
+    return <>{children}</>;
+  } else {
+    return <Text color="black">{value}</Text>;
+  }
+};
+
+const defaultRule = {
+  required: 'ต้องกรอกฟิลด์นี้'
+};
 
 export default EditProfileTab;

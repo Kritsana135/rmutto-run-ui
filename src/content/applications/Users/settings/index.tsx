@@ -1,14 +1,13 @@
-import { useState, ChangeEvent } from 'react';
-import { Helmet } from 'react-helmet-async';
-import PageHeader from './PageHeader';
-import PageTitleWrapper from 'src/components/PageTitleWrapper';
-import { Container, Tabs, Tab, Grid } from '@mui/material';
-import Footer from 'src/components/Footer';
+import { useQuery } from '@apollo/client';
+import { Container, Grid, Tab, Tabs } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import ActivityTab from './ActivityTab';
+import { ChangeEvent, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import Footer from 'src/components/Footer';
+import PageTitleWrapper from 'src/components/PageTitleWrapper';
+import { ProfileRes, PROFILE_DOCUMENT } from 'src/graphql/profile/me';
 import EditProfileTab from './EditProfileTab';
-import NotificationsTab from './NotificationsTab';
+import PageHeader from './PageHeader';
 import SecurityTab from './SecurityTab';
 
 const TabsWrapper = styled(Tabs)(
@@ -20,13 +19,10 @@ const TabsWrapper = styled(Tabs)(
 );
 
 function ManagementUserSettings() {
-
-  const [currentTab, setCurrentTab] = useState<string>('activity');
+  const [currentTab, setCurrentTab] = useState<string>('edit_profile');
 
   const tabs = [
-    { value: 'activity', label: 'Activity' },
     { value: 'edit_profile', label: 'Edit Profile' },
-    { value: 'notifications', label: 'Notifications' },
     { value: 'security', label: 'Passwords/Security' }
   ];
 
@@ -34,13 +30,17 @@ function ManagementUserSettings() {
     setCurrentTab(value);
   };
 
+  const res = useQuery<ProfileRes>(PROFILE_DOCUMENT);
+
+  const Profile = res?.data?.me;
+
   return (
     <>
       <Helmet>
         <title>User Settings - Applications</title>
       </Helmet>
       <PageTitleWrapper>
-        <PageHeader />
+        <PageHeader name={`${Profile?.firstName} ${Profile?.lastName}`} />
       </PageTitleWrapper>
       <Container maxWidth="lg">
         <Grid
@@ -65,14 +65,11 @@ function ManagementUserSettings() {
             </TabsWrapper>
           </Grid>
           <Grid item xs={12}>
-            {currentTab === 'activity' && <ActivityTab />}
             {currentTab === 'edit_profile' && <EditProfileTab />}
-            {currentTab === 'notifications' && <NotificationsTab />}
             {currentTab === 'security' && <SecurityTab />}
           </Grid>
         </Grid>
       </Container>
-      <Footer />
     </>
   );
 }

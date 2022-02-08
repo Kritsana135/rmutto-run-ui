@@ -1,20 +1,24 @@
-import PropTypes from 'prop-types';
+import { useMutation } from '@apollo/client';
+import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import {
-  Box,
-  Typography,
-  Card,
-  Tooltip,
   Avatar,
-  CardMedia,
+  Box,
   Button,
-  IconButton
+  Card,
+  CardMedia,
+  IconButton,
+  ListItem,
+  ListItemText,
+  Typography
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import ArrowBackTwoToneIcon from '@mui/icons-material/ArrowBackTwoTone';
-import ArrowForwardTwoToneIcon from '@mui/icons-material/ArrowForwardTwoTone';
-import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
-import MoreHorizTwoToneIcon from '@mui/icons-material/MoreHorizTwoTone';
+import { FC, useEffect, useState } from 'react';
+import { UPLOAD_PROFILE_DOCUMENT } from 'src/graphql/profile/imageUpload';
+import { IUserProps } from 'src/models/userModel';
+import { getUserId } from 'src/utils/accessToken';
+import { resizeFile } from 'src/utils/image';
+import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
+import { NavLink } from 'react-router-dom';
 
 const Input = styled('input')({
   display: 'none'
@@ -70,57 +74,68 @@ const CardCover = styled(Card)(
 `
 );
 
-const CardCoverAction = styled(Box)(
-  ({ theme }) => `
-    position: absolute;
-    right: ${theme.spacing(2)};
-    bottom: ${theme.spacing(2)};
-`
-);
+const ProfileCover: FC<IUserProps> = ({ user }) => {
+  const [imageProfile, setImageProfile] = useState<string | null>(null);
 
+  const [UploadProfile] = useMutation(UPLOAD_PROFILE_DOCUMENT);
 
-const ProfileCover = ({ user }) => {
+  const handleSelectedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { files } = event.target;
+    resizeFile(files[0])
+      .then((resFile: File) => {
+        UploadProfile({
+          variables: { picture: resFile },
+          onCompleted: handleProfile
+        });
+      })
+      .catch(() => {
+        UploadProfile({
+          variables: { picture: files[0] },
+          onCompleted: handleProfile
+        });
+      });
+  };
+
+  const handleProfile = () => {
+    const userId = getUserId();
+    if (userId) {
+      console.log(userId);
+      // TODO: change fixed path
+      setImageProfile(
+        `http://localhost:4001/profile/${userId}-.png?t=${new Date().getTime()}`
+      );
+    }
+  };
+
+  useEffect(() => {
+    handleProfile();
+  }, []);
 
   return (
     <>
       <Box display="flex" mb={3}>
-        <Tooltip arrow placement="top" title="Go back">
-          <IconButton color="primary" sx={{ p: 2, mr: 2 }}>
-            <ArrowBackTwoToneIcon />
-          </IconButton>
-        </Tooltip>
         <Box>
           <Typography variant="h3" component="h3" gutterBottom>
-            Profile for {user.name}
-          </Typography>
-          <Typography variant="subtitle2">
-            This is a profile page. Easy to modify, always blazing fast
+            Profile for {`${user.firstName} ${user.lastName}`}
           </Typography>
         </Box>
       </Box>
       <CardCover>
-        <CardMedia image={user.coverImg} />
-        <CardCoverAction>
-          <Input accept="image/*" id="change-cover" multiple type="file" />
-          <label htmlFor="change-cover">
-            <Button
-              startIcon={<UploadTwoToneIcon />}
-              variant="contained"
-              component="span"
-            >
-              Change cover
-            </Button>
-          </label>
-        </CardCoverAction>
+        <CardMedia image="https://www.coverphotosforfb.com/files/covers/2069-run-motivation.jpg" />
       </CardCover>
       <AvatarWrapper>
-        <Avatar variant="rounded" alt={user.name} src={user.avatar} />
+        <Avatar
+          variant="rounded"
+          alt={`${user.firstName} ${user.lastName}`}
+          src={imageProfile}
+        />
         <ButtonUploadWrapper>
           <Input
             accept="image/*"
             id="icon-button-file"
             name="icon-button-file"
             type="file"
+            onChange={handleSelectedFile}
           />
           <label htmlFor="icon-button-file">
             <IconButton component="span" color="primary">
@@ -129,50 +144,32 @@ const ProfileCover = ({ user }) => {
           </label>
         </ButtonUploadWrapper>
       </AvatarWrapper>
-      <Box py={2} pl={2} mb={3}>
-        <Typography gutterBottom variant="h4">
-          {user.name}
-        </Typography>
-        <Typography variant="subtitle2">{user.description}</Typography>
-        <Typography sx={{ py: 2 }} variant="subtitle2" color="text.primary">
-          {user.jobtitle} | {user.location} | {user.followers} followers
-        </Typography>
-        <Box
-          display={{ xs: 'block', md: 'flex' }}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Box>
-            <Button size="small" variant="contained">
-              Follow
-            </Button>
-            <Button size="small" sx={{ mx: 1 }} variant="outlined">
-              View website
-            </Button>
-            <IconButton color="primary" sx={{ p: 0.5 }}>
-              <MoreHorizTwoToneIcon />
-            </IconButton>
-          </Box>
+      <Box
+        py={2}
+        pl={2}
+        mb={3}
+        display={'flex'}
+        justifyContent={'space-between'}
+      >
+        <Box>
+          <Typography gutterBottom variant="h4">
+            {`${user.firstName} ${user.lastName}`}
+          </Typography>
+          <Typography variant="subtitle2">{user.bio}</Typography>
+        </Box>
+        <Box>
           <Button
-            sx={{ mt: { xs: 2, md: 0 } }}
-            size="small"
-            variant="text"
-            endIcon={<ArrowForwardTwoToneIcon />}
+            variant="outlined"
+            startIcon={<AccountTreeTwoToneIcon fontSize="small" />}
+            to="/settings"
+            component={NavLink}
           >
-            See all {' '}
-            {user.followers}
-            {' '}
-            connections
+            Account Settings
           </Button>
         </Box>
       </Box>
     </>
   );
-};
-
-ProfileCover.propTypes = {
-  // @ts-ignore
-  user: PropTypes.object.isRequired
 };
 
 export default ProfileCover;

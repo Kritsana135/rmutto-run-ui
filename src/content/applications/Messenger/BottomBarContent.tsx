@@ -1,18 +1,17 @@
+import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
 import {
-  Card,
   Avatar,
-  Tooltip,
-  IconButton,
   Box,
   Button,
+  Card,
+  Divider,
   Hidden,
-  TextField,
-  Divider
+  TextField
 } from '@mui/material';
-
 import { styled } from '@mui/material/styles';
-import AttachFileTwoToneIcon from '@mui/icons-material/AttachFileTwoTone';
-import SendTwoToneIcon from '@mui/icons-material/SendTwoTone';
+import { Controller, useForm } from 'react-hook-form';
+import { getUserId } from '../../../utils/accessToken';
+import { getProfileUrl } from '../../../utils/image';
 
 const DividerWrapper = styled(Divider)(
   ({ theme }) => `
@@ -22,48 +21,58 @@ const DividerWrapper = styled(Divider)(
 `
 );
 
-const Input = styled('input')({
-  display: 'none'
-});
+export interface MessageForm {
+  content: string;
+}
 
-function BottomBarContent() {
+interface BottomBarContentProps {
+  handleSendChat: (item: MessageForm) => void;
+}
 
-  const user =
-  {
-    name: 'Catherine Pike',
-    avatar: '/static/images/avatars/1.jpg'
-  };
+function BottomBarContent({ handleSendChat }: BottomBarContentProps) {
+  const profileImage = getProfileUrl(getUserId());
+  const { control, handleSubmit, watch } = useForm<MessageForm>();
 
+  const disableSend = watch('content') ? false : true;
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
       <Hidden mdDown>
-        <Avatar alt={user.name} src={user.avatar} />
+        <Avatar src={profileImage} />
         <DividerWrapper orientation="vertical" flexItem />
       </Hidden>
       <Box sx={{ flex: 1, mr: 2 }}>
-        <TextField
-          hiddenLabel
-          fullWidth
-          placeholder="Write here your message..."
+        <Controller
+          control={control}
+          name="content"
+          render={({ field }) => (
+            <TextField
+              {...field}
+              hiddenLabel
+              fullWidth
+              placeholder="Write here your message..."
+            />
+          )}
         />
       </Box>
-      <Tooltip arrow placement="top" title="Choose an emoji">
-        <IconButton color="primary">😀</IconButton>
-      </Tooltip>
-      <Input accept="image/*" id="messenger-upload-file" type="file" />
-      <Tooltip arrow placement="top" title="Attach a file">
-        < label htmlFor="messenger-upload-file" >
+      {/* TODO: can send image */}
+      {/* <Input accept="image/*" id="messenger-upload-file" type="file" /> */}
+      {/* <Tooltip arrow placement="top" title="Attach a file">
+        <label htmlFor="messenger-upload-file">
           <IconButton color="primary" component="span">
             <AttachFileTwoToneIcon />
           </IconButton>
-        </label >
-      </Tooltip >
-      <Hidden mdDown>
-        <DividerWrapper orientation="vertical" flexItem />
-        <Button startIcon={<SendTwoToneIcon />} variant="contained">
-          Send
-        </Button>
-      </Hidden>
+        </label>
+      </Tooltip> */}
+      <DividerWrapper orientation="vertical" flexItem />
+      <Button
+        startIcon={<SendTwoToneIcon />}
+        variant="contained"
+        type="submit"
+        disabled={disableSend}
+        onClick={handleSubmit(handleSendChat)}
+      >
+        Send
+      </Button>
     </Card>
   );
 }

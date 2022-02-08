@@ -9,45 +9,49 @@
   },
   "private": false,
   "dependencies": {
+    "@apollo/client": "^3.5.8",
     "@emotion/react": "11.4.1",
     "@emotion/styled": "11.3.0",
-    "@mui/material": "5.0.3",
     "@mui/icons-material": "5.0.3",
     "@mui/lab": "5.0.0-alpha.50",
-    "@mui/styles": "5.0.1",
-    "@types/nprogress": "0.2.0",
-    "@types/react": "17.0.25",
-    "@types/react-dom": "17.0.9",
-    "@types/react-router-dom": "5.3.0",
+    "@mui/material": "5.0.3",
+    "@mui/styles": "^5.0.1",
+    "@types/lodash": "^4.14.178",
+    "antd": "^4.18.5",
+    "apollo-upload-client": "^17.0.0",
     "chart.js": "2.9.4",
     "clsx": "1.1.1",
     "date-fns": "2.25.0",
+    "dayjs": "^1.10.7",
+    "graphql": "^16.3.0",
     "history": "5.0.1",
+    "loadsh": "^0.0.4",
     "nprogress": "0.2.0",
     "numeral": "2.0.6",
     "prop-types": "15.7.2",
     "react": "17.0.2",
+    "react-chartjs-2": "2.11.1",
+    "react-countdown": "^2.3.2",
     "react-custom-scrollbars-2": "4.4.0",
     "react-dom": "17.0.2",
     "react-helmet-async": "1.1.2",
+    "react-hook-form": "^7.25.3",
+    "react-image-file-resizer": "^0.4.7",
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "4.0.3",
+    "react-select": "^5.2.2",
+    "react-select-search": "^3.0.9",
+    "react-viewer": "^3.2.2",
     "stylis": "4.0.10",
     "stylis-plugin-rtl": "2.1.0",
-    "react-chartjs-2": "2.11.1",
     "web-vitals": "2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3000 && react-scripts start",
     "build": "react-scripts build",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "browserslist": {
     "production": [
@@ -63,6 +67,16 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.15.8",
+    "@graphql-codegen/cli": "2.4.0",
+    "@graphql-codegen/fragment-matcher": "3.2.1",
+    "@graphql-codegen/typescript": "2.4.2",
+    "@graphql-codegen/typescript-document-nodes": "2.2.2",
+    "@graphql-codegen/typescript-graphql-files-modules": "2.1.1",
+    "@graphql-codegen/typescript-operations": "2.2.2",
+    "@graphql-codegen/typescript-react-apollo": "3.2.4",
+    "@graphql-codegen/urql-introspection": "2.1.1",
+    "@types/apollo-upload-client": "^17.0.0",
+    "@types/nprogress": "0.2.0",
     "@types/numeral": "2.0.2",
     "@types/react": "17.0.29",
     "@types/react-dom": "17.0.9",
@@ -78,8 +92,13 @@
     "eslint-plugin-prettier": "4.0.0",
     "eslint-plugin-react": "7.26.1",
     "eslint-plugin-react-hooks": "4.2.0",
+    "node-sass": "6.0.1",
     "prettier": "2.4.1",
-    "typescript": "4.4.4",
-    "node-sass": "6.0.1"
+    "react-error-overlay": "^6.0.9",
+    "typescript": "^4.5.5"
+  },
+  "resolutions": {
+    "graphql": "^16.3.0",
+    "**/graphql": "^16.3.0"
   }
 }

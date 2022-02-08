@@ -1,15 +1,11 @@
-import { useContext } from 'react';
-
+import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
+import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
 import { Box, Hidden, IconButton, Tooltip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import MenuTwoToneIcon from '@mui/icons-material/MenuTwoTone';
-import { SidebarContext } from 'src/contexts/SidebarContext';
-import CloseTwoToneIcon from '@mui/icons-material/CloseTwoTone';
-
-import HeaderMenu from './Menu';
-import HeaderButtons from './Buttons';
-import HeaderUserbox from './Userbox';
+import { useContext } from 'react';
 import Logo from 'src/components/Logo';
+import { SidebarContext } from 'src/contexts/SidebarContext';
+import HeaderUserbox from './Userbox';
 
 const HeaderWrapper = styled(Box)(
   ({ theme }) => `
@@ -39,13 +35,8 @@ function Header() {
         <Hidden lgUp>
           <Logo />
         </Hidden>
-        <Hidden mdDown>
-          <HeaderMenu />
-        </Hidden>
       </Box>
       <Box display="flex" alignItems="center">
-        <HeaderButtons />
-        <HeaderUserbox />
         <Hidden lgUp>
           <Tooltip arrow title="Toggle Menu">
             <IconButton color="primary" onClick={toggleSidebar}>

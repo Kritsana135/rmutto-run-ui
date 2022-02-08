@@ -1,21 +1,34 @@
-import App from './App';
+import { ApolloProvider } from '@apollo/client';
+import 'nprogress/nprogress.css';
 import ReactDOM from 'react-dom';
-import 'src/utils/chart';
-import * as serviceWorker from './serviceWorker';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
-
-import 'nprogress/nprogress.css';
+import AlertProvider from 'src/contexts/AlertProvider';
+import LoaderProvider from 'src/contexts/LoaderProvider';
+import { client } from 'src/graphql/getClient';
+import 'src/utils/chart';
+import App from './App';
 import { SidebarProvider } from './contexts/SidebarContext';
+import * as serviceWorker from './serviceWorker';
+import './index.css';
+import { ChatSidebarProvider } from './contexts/ChatSidebarContext';
 
 ReactDOM.render(
-  <HelmetProvider>
-    <SidebarProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </SidebarProvider>
-  </HelmetProvider>,
+  <ApolloProvider client={client}>
+    <LoaderProvider>
+      <AlertProvider>
+        <HelmetProvider>
+          <SidebarProvider>
+            <ChatSidebarProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </ChatSidebarProvider>
+          </SidebarProvider>
+        </HelmetProvider>
+      </AlertProvider>
+    </LoaderProvider>
+  </ApolloProvider>,
   document.getElementById('root')
 );
 
