@@ -71,16 +71,16 @@ function ForgotForm() {
     <Container maxWidth="sm" sx={{ textAlign: 'left' }}>
       <Grid justifyContent="flex-start" alignItems="center" container>
         <Grid item>
-          <TypographyH1 sx={{ mb: 2 }} variant="h2">
-            กู้คืนรหัสผ่าน
+          <TypographyH1 sx={{ mb: 2 }} variant="h3">
+            Password Recovery
           </TypographyH1>
           <TypographyH2
-            sx={{ lineHeight: 1.5, pb: 4 }}
+            sx={{ lineHeight: 1.2, pb: 3 }}
             variant="h4"
             color="text.secondary"
             fontWeight="normal"
           >
-            ป้อนอีเมลที่ใช้ลงทะเบียนเพื่อรีเซ็ตรหัสผ่านของคุณ.
+            Enter your registered email to reset your password.
           </TypographyH2>
         </Grid>
 
@@ -90,7 +90,7 @@ function ForgotForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="อีเมลล์"
+                  label="Email"
                   variant="outlined"
                   type="email"
                   error={!!errors.email}
@@ -103,8 +103,7 @@ function ForgotForm() {
               rules={{
                 ...defaultRule,
                 validate: (value) =>
-                  ValidateUtils.validateEmail(value) ||
-                  'รูปแบบของอีเมลล์ไม่ถูกต้อง'
+                  ValidateUtils.validateEmail(value) || 'Invalid email format'
               }}
             />
             <Box mt={2}>
@@ -114,7 +113,7 @@ function ForgotForm() {
                 type="submit"
                 fullWidth
               >
-                ส่งอีเมล
+                send recovery email
               </Button>
             </Box>
           </form>
@@ -130,7 +129,7 @@ const defaultForm: ILoginInput = {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default ForgotForm;

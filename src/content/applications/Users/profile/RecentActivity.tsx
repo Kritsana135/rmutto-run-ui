@@ -24,6 +24,7 @@ import {
   MY_PROGRESS_DOCUMENT
 } from 'src/graphql/progress/myProgress';
 import { IUserProps } from 'src/models/userModel';
+import { eventKey } from '../../../../config';
 
 const AvatarPrimary = styled(Avatar)(
   ({ theme }) => `
@@ -70,9 +71,8 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
 
   const [progress, setProgress] = useState(0);
 
-  // TODO: change event key to ENV
   useQuery<IAppRes, IAppReq>(APP_DOCUMENT, {
-    variables: { eventKey: 'run' },
+    variables: { eventKey },
     onCompleted: (res) => {
       setApp(res.app);
     }

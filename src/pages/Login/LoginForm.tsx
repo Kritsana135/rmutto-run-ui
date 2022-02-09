@@ -107,7 +107,7 @@ function LoginForm() {
                 ...defaultRule,
                 validate: (value) =>
                   ValidateUtils.validateEmail(value) ||
-                  'รูปแบบของอีเมลล์ไม่ถูกต้อง'
+                  'Invalid email format'
               }}
             />
             <Controller
@@ -163,7 +163,7 @@ const defaultForm: ILoginInput = {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default LoginForm;

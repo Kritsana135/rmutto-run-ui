@@ -1,4 +1,4 @@
-export const api_path =
-  process.env.APOLLO_PATH || 'http://localhost:4001/graphql';
+export const api_path = process.env.REACT_APP_APOLLO_PATH;
+export const express_path = process.env.REACT_APP_SERVER_PATH;
 
-export const express_path = 'http://localhost:4001';
+export const eventKey = process.env.REACT_APP_EVENT_KEY;

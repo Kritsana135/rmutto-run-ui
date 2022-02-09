@@ -71,14 +71,16 @@ const LogoSignInner = styled(Box)(
 );
 
 function Logo() {
-
   return (
-    <Tooltip title="Tokyo Free White React Admin Dashboard" arrow>
+    <Tooltip title="RMUTTO - RUN" arrow>
       <LogoWrapper to="/overview">
         <LogoSignWrapper>
-          <LogoSign>
-            <LogoSignInner />
-          </LogoSign>
+          <img
+            src="/static/images/logo/huso_logo.png"
+            alt=""
+            width={'64px'}
+            height={'64px'}
+          />
         </LogoSignWrapper>
       </LogoWrapper>
     </Tooltip>

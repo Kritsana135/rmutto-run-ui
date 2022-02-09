@@ -197,7 +197,7 @@ const defaultForm: IAppInput = {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default Forms;

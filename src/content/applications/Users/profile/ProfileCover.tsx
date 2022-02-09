@@ -19,6 +19,7 @@ import { getUserId } from 'src/utils/accessToken';
 import { resizeFile } from 'src/utils/image';
 import AccountTreeTwoToneIcon from '@mui/icons-material/AccountTreeTwoTone';
 import { NavLink } from 'react-router-dom';
+import { express_path } from '../../../../config';
 
 const Input = styled('input')({
   display: 'none'
@@ -100,9 +101,8 @@ const ProfileCover: FC<IUserProps> = ({ user }) => {
     const userId = getUserId();
     if (userId) {
       console.log(userId);
-      // TODO: change fixed path
       setImageProfile(
-        `http://localhost:4001/profile/${userId}-.png?t=${new Date().getTime()}`
+        `${express_path}/profile/${userId}-.png?t=${new Date().getTime()}`
       );
     }
   };

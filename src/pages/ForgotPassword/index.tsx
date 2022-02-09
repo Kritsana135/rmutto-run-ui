@@ -29,7 +29,7 @@ function FotgotPassword() {
           <ForgotForm />
         </Card>
         <Box p={1} display={'flex'} justifyContent={'flex-end'}>
-          <span>ต้องการลองลงชื่อเข้าใช้อีกครั้งหรือไม่ </span>
+          <span>Want to try signing in again? </span>
           <Link
             to="/login"
             underline="hover"
@@ -37,7 +37,7 @@ function FotgotPassword() {
             ml={1}
             component={ReactLink}
           >
-            <b> คลิกที่นี่</b>
+            <b> Click here</b>
           </Link>
         </Box>
       </Container>

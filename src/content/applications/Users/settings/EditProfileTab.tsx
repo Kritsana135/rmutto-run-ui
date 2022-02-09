@@ -277,7 +277,7 @@ const EditAbleWrapper: FC<IEditableProps> = ({ value, edit, children }) => {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default EditProfileTab;
