@@ -73,7 +73,7 @@ const LogoSignInner = styled(Box)(
 function Logo() {
   return (
     <Tooltip title="RMUTTO - RUN" arrow>
-      <LogoWrapper to="/overview">
+      <LogoWrapper to="/">
         <LogoSignWrapper>
           <img
             src="/static/images/logo/huso_logo.png"

@@ -129,7 +129,7 @@ function LoginForm() {
                 ...defaultRule,
                 minLength: {
                   value: 8,
-                  message: 'รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร'
+                  message: 'Password must be at least 8 characters long.'
                 }
               }}
             />
