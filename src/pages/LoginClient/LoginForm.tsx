@@ -152,16 +152,17 @@ function LoginForm() {
           </Grid>
           <Grid item mt={1}>
             <Box display={'flex'} justifyContent={'flex-start'}>
-              <span>Don’t have an account, yet?</span>
-              <Link
-                component={RouterLink}
-                to="/signup"
-                underline="hover"
-                color="primary"
-                ml={1}
-              >
-                <b> Sign up here</b>
-              </Link>
+              <span>
+                Don’t have an account, yet?
+                <Link
+                  component={RouterLink}
+                  to="/signup"
+                  underline="hover"
+                  color="primary"
+                >
+                  <b> Sign up here</b>
+                </Link>
+              </span>
             </Box>
           </Grid>
         </form>
@@ -176,7 +177,7 @@ const defaultForm: ILoginInput = {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default LoginForm;

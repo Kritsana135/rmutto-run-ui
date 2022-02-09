@@ -5,7 +5,6 @@ import { AuthWrapper } from 'src/components/AuthWrapper';
 import Logo from 'src/components/LogoSign';
 import ForgotForm from './SignUpForm';
 
-
 function SignUp() {
   return (
     <AuthWrapper>
@@ -20,7 +19,7 @@ function SignUp() {
           <ForgotForm />
         </Card>
         <Box p={1} display={'flex'} justifyContent={'flex-end'}>
-          <span>ต้องการลองลงชื่อเข้าใช้อีกครั้งหรือไม่ </span>
+          <span>Want to try logging in again? </span>
           <Link
             to="/login"
             underline="hover"
@@ -28,7 +27,7 @@ function SignUp() {
             ml={1}
             component={ReactLink}
           >
-            <b> คลิกที่นี่</b>
+            <b> click here</b>
           </Link>
         </Box>
       </Container>

@@ -249,7 +249,7 @@ const UpdateProgress: FC = () => {
                   name="km"
                   control={control}
                   rules={{
-                    required: 'ต้องกรอกฟิลด์นี้',
+                    required: 'This field is required.',
                     validate: (value) => value > 0 || 'ต้องมีค่ามากกว่า 0'
                   }}
                   defaultValue={0}

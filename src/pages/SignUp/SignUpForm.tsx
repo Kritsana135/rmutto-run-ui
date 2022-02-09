@@ -16,7 +16,11 @@ import { IBaseInputReq } from 'src/graphql/base';
 
 import ValidateUtils from 'src/utils/ValidateUtils';
 import _ from 'loadsh';
-import { ISignupInputForm, ISignUpRes, SIGNUP_DOCUMENT } from 'src/graphql/auth/signup';
+import {
+  ISignupInputForm,
+  ISignUpRes,
+  SIGNUP_DOCUMENT
+} from 'src/graphql/auth/signup';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -41,7 +45,6 @@ function SignUpForm() {
   const navigate = useNavigate();
 
   const onSignUp = (input: ISignupInputForm) => {
-    console.log(input);
     openLoader();
     const newInput = _.omit(input, 'confirmPassword');
     SignUp({
@@ -77,7 +80,7 @@ function SignUpForm() {
     if (password !== confirmPassword) {
       setError('confirmPassword', {
         type: 'pattern',
-        message: 'รหัสผ่านไม่ตรงกัน'
+        message: 'Passwords do not match'
       });
       return false;
     }
@@ -92,7 +95,7 @@ function SignUpForm() {
       <Grid justifyContent="flex-start" alignItems="center" container>
         <Grid item>
           <TypographyH1 sx={{ mb: 2 }} variant="h2">
-            สมัครใช้งาน
+            Sign up
           </TypographyH1>
         </Grid>
 
@@ -103,7 +106,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="ชื่อ"
+                  label="Fist name"
                   variant="outlined"
                   type="string"
                   error={!!errors.firstName}
@@ -120,7 +123,7 @@ function SignUpForm() {
                 ...defaultRule,
                 minLength: {
                   value: 2,
-                  message: 'ชื่อต้องมีความยาวตั้งแต่ 2 ตัวอักษรขึ้นไป'
+                  message: 'Name must be at least 2 characters long.'
                 }
               }}
             />
@@ -129,7 +132,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="นามสกุล"
+                  label="Last name"
                   type="string"
                   variant="outlined"
                   style={{ marginTop: 9 }}
@@ -147,7 +150,7 @@ function SignUpForm() {
                 ...defaultRule,
                 minLength: {
                   value: 2,
-                  message: 'นามสกุลต้องมีความยาวตั้งแต่ 2 ตัวอักษรขึ้นไป'
+                  message: 'Last name must be at least 2 characters long.'
                 }
               }}
             />
@@ -156,7 +159,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="ที่อยู่"
+                  label="Address"
                   type="string"
                   variant="outlined"
                   style={{ marginTop: 9 }}
@@ -174,7 +177,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="เบอร์โทรศัพท์"
+                  label="Phone number"
                   type="string"
                   variant="outlined"
                   style={{ marginTop: 9 }}
@@ -192,7 +195,7 @@ function SignUpForm() {
                 ...defaultRule,
                 minLength: {
                   value: 9,
-                  message: 'เบอร์โทรศัพท์ต้องมีความยาวตั้งแต่ 9 ตัวอักษรขึ้นไป'
+                  message: 'Phone number must be at least 9 characters long.'
                 }
               }}
             />
@@ -214,8 +217,7 @@ function SignUpForm() {
               rules={{
                 ...defaultRule,
                 validate: (email) =>
-                  ValidateUtils.validateEmail(email) ||
-                  'รูปแบบของEmailไม่ถูกต้อง'
+                  ValidateUtils.validateEmail(email) || 'Invalid email format'
               }}
             />
             {/* password */}
@@ -241,7 +243,7 @@ function SignUpForm() {
                 ...defaultRule,
                 minLength: {
                   value: 8,
-                  message: 'รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร'
+                  message: 'Password must be at least 8 characters long.'
                 }
               }}
             />
@@ -250,7 +252,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="ยืนยันรหัสผ่าน"
+                  label="Confirm password"
                   type="password"
                   variant="outlined"
                   style={{ marginTop: 9 }}
@@ -269,10 +271,10 @@ function SignUpForm() {
                 ...defaultRule,
                 minLength: {
                   value: 8,
-                  message: 'รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร'
+                  message: 'Password must be at least 8 characters long.'
                 },
                 validate: (confirmPassword) =>
-                  password === confirmPassword || 'รหัสผ่านไม่ตรงกัน'
+                  password === confirmPassword || 'Passwords do not match'
               }}
             />
             <Box mt={2}>
@@ -282,7 +284,7 @@ function SignUpForm() {
                 type="submit"
                 fullWidth
               >
-                สมัครใช้งาน
+                Sign up
               </Button>
             </Box>
           </form>
@@ -303,7 +305,7 @@ const defaultForm: ISignupInputForm = {
 };
 
 const defaultRule = {
-  required: 'ต้องกรอกฟิลด์นี้'
+  required: 'This field is required.'
 };
 
 export default SignUpForm;
