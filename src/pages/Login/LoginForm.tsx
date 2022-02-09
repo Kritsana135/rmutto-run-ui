@@ -19,7 +19,7 @@ import {
   ILoginReq,
   ILoginRes,
   LOGIN_DOCUMENT
-} from 'src/graphql/signin';
+} from 'src/graphql/auth/signin';
 import { setAccessToken, setUserId } from 'src/utils/accessToken';
 import ValidateUtils from 'src/utils/ValidateUtils';
 

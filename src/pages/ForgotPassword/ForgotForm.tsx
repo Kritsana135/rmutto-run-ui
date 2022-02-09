@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Grid,
-  Link,
   TextField,
   Typography
 } from '@mui/material';
@@ -13,14 +12,12 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { useAlertContext } from 'src/contexts/AlertProvider';
 import { useLoaderContext } from 'src/contexts/LoaderProvider';
-import {
-  ILoginInput,
-  ILoginReq,
-  ILoginRes,
-  LOGIN_DOCUMENT
-} from 'src/graphql/signin';
-import { setAccessToken, setUserId } from 'src/utils/accessToken';
 import ValidateUtils from 'src/utils/ValidateUtils';
+import {
+  ISendRecoveryInput,
+  ISendRecoveryReq,
+  SEND_RECOVERY_DOCUMENT
+} from '../../graphql/auth/sendRecovery';
 
 const TypographyH1 = styled(Typography)(
   ({ theme }) => `
@@ -39,33 +36,31 @@ function ForgotForm() {
     handleSubmit,
     control,
     formState: { errors }
-  } = useForm<ILoginInput>({ defaultValues: defaultForm });
+  } = useForm<ISendRecoveryInput>({ defaultValues: defaultForm });
 
-  const [Login] = useMutation<ILoginRes, ILoginReq>(LOGIN_DOCUMENT);
+  const [SendRecovery] = useMutation<any, ISendRecoveryReq>(
+    SEND_RECOVERY_DOCUMENT
+  );
 
   const navigate = useNavigate();
 
-  const onLogin = (input: ILoginInput) => {
-    console.log(input);
+  const { openLoader, closeLoader } = useLoaderContext();
+  const { openAlert } = useAlertContext();
+
+  const onLogin = (input: ISendRecoveryInput) => {
     openLoader();
-    Login({
+    SendRecovery({
       variables: { input },
       onCompleted: (res) => {
-        console.log(res);
         closeLoader();
-        if (res.login.code === 'OK') {
-          setAccessToken(res.login.payload?.accessToken || '');
-          setUserId(res.login.payload?.userId || '');
-          navigate('/management/app');
-        } else {
-          openAlert({ message: res.login.message, severity: 'warning' });
-        }
+        openAlert({ message: res.sendResetPassEmail, severity: 'success' });
+      },
+      onError: (res) => {
+        closeLoader();
+        openAlert({ message: res.message, severity: 'error' });
       }
     });
   };
-
-  const { openLoader, closeLoader } = useLoaderContext();
-  const { openAlert } = useAlertContext();
 
   return (
     <Container maxWidth="sm" sx={{ textAlign: 'left' }}>
@@ -123,9 +118,8 @@ function ForgotForm() {
   );
 }
 
-const defaultForm: ILoginInput = {
-  email: '',
-  password: ''
+const defaultForm: ISendRecoveryInput = {
+  email: ''
 };
 
 const defaultRule = {
