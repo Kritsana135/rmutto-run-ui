@@ -47,7 +47,8 @@
     "web-vitals": "2.1.2"
   },
   "scripts": {
-    "start": "set PORT=3000 && react-scripts start",
+    "start:client": "set REACT_APP_MODE=CLIENT& react-scripts start",
+    "start:admin": "set REACT_APP_MODE=ADMIN& react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "generate": "graphql-codegen --config codegen.yml"

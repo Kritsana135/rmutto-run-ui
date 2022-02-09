@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router';
 import { useRoutes } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { express_path } from 'src/config';
+import routes from 'src/routers';
 import { setAccessToken, setUserId } from 'src/utils/accessToken';
-import routes from './router';
 import ThemeProvider from './theme/ThemeProvider';
 
 const App = () => {
@@ -17,6 +17,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('env', process.env.REACT_APP_TEST);
     fetch(`${express_path}/refresh_token`, {
       method: 'POST',
       credentials: 'include'
