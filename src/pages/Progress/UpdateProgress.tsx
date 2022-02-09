@@ -18,7 +18,12 @@ import { makeStyles } from '@mui/styles';
 import { resizeFile } from 'src/utils/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useMutation } from '@apollo/client';
-import { UPDATE_PROGRESS_DOCUMENT } from 'src/graphql/progress/updateProgress';
+import {
+  IUpdateProgressRes,
+  UPDATE_PROGRESS_DOCUMENT
+} from 'src/graphql/progress/updateProgress';
+import { useLoaderContext } from 'src/contexts/LoaderProvider';
+import { useAlertContext } from 'src/contexts/AlertProvider';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -84,7 +89,9 @@ const UpdateProgress: FC = () => {
     formState: { errors }
   } = useForm<progressForm>();
 
-  const [UpdateProgress] = useMutation(UPDATE_PROGRESS_DOCUMENT);
+  const [UpdateProgress] = useMutation<IUpdateProgressRes>(
+    UPDATE_PROGRESS_DOCUMENT
+  );
 
   const handleSelectedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -100,6 +107,9 @@ const UpdateProgress: FC = () => {
     }
   };
 
+  const { openLoader, closeLoader } = useLoaderContext();
+  const { openAlert } = useAlertContext();
+
   const handleClose = (
     _: React.SyntheticEvent | React.MouseEvent,
     reason?: string
@@ -112,18 +122,36 @@ const UpdateProgress: FC = () => {
 
   const onUpload = (data: progressForm) => {
     if (file) {
+      openLoader();
+      let km: number = 0;
+      if (typeof data.km === 'string') {
+        km = parseFloat(data.km);
+      } else {
+        km = data.km;
+      }
       UpdateProgress({
         variables: {
           picture: file,
-          km: 10
+          km
         },
-        onCompleted: () => {
+        onCompleted: (res) => {
+          closeLoader();
+          openAlert({
+            message: res.uploadProgress.message,
+            severity: 'success'
+          });
           setFile(null);
           reset();
+        },
+        onError: (res) => {
+          closeLoader();
+          openAlert({
+            message: res.message,
+            severity: 'error'
+          });
         }
       });
     } else {
-      console.log('error');
       setError('km', {
         type: 'required',
         message: 'ต้องเลือกรูปภาพ'
