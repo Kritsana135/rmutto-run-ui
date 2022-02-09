@@ -1,11 +1,10 @@
-import { Suspense, lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { lazy, Suspense } from 'react';
 import { PartialRouteObject } from 'react-router';
-
-import SidebarLayout from 'src/layouts/SidebarLayout';
-import BaseLayout from 'src/layouts/BaseLayout';
-
+import { Navigate } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
+import BaseLayout from 'src/layouts/BaseLayout';
+import SidebarLayout from 'src/layouts/SidebarLayout';
+import RequireAuth from './components/RequireAuth';
 import Login from './pages/Login';
 
 const Loader = (Component) => (props) =>
@@ -85,15 +84,7 @@ const LeaderboardTable = Loader(
   lazy(() => import('src/pages/LeaderboardTable'))
 );
 const ProgressTxtTable = Loader(lazy(() => import('src/pages/ProgressTable')));
-
-export const notRequireAuth = [
-  '/',
-  '/login',
-  '/status',
-  '/forgot-password',
-  '/signup',
-  '/verify'
-];
+const ChangePassword = Loader(lazy(() => import('src/pages/ChangePassword')));
 
 const baseRoute: PartialRouteObject[] = [
   {
@@ -115,6 +106,10 @@ const baseRoute: PartialRouteObject[] = [
       {
         path: 'verify/:token',
         element: <Verify />
+      },
+      {
+        path: 'reset/:token',
+        element: <ChangePassword />
       },
       {
         path: 'status',
@@ -153,21 +148,17 @@ const routes: PartialRouteObject[] = [
   ...baseRoute,
   {
     path: 'profile',
-    element: <SidebarLayout />,
+    element: <RequireAuth children={<SidebarLayout />} />,
     children: [
       {
         path: '/',
-        element: <Navigate to="details" replace />
-      },
-      {
-        path: 'details',
         element: <UserProfile />
       }
     ]
   },
   {
     path: 'settings',
-    element: <SidebarLayout />,
+    element: <RequireAuth children={<SidebarLayout />} />,
     children: [
       {
         path: '/',
@@ -187,7 +178,7 @@ const routes: PartialRouteObject[] = [
   },
   {
     path: 'progress-approval',
-    element: <SidebarLayout />,
+    element: <RequireAuth children={<SidebarLayout />} />,
     children: [
       {
         path: '/',
@@ -197,7 +188,7 @@ const routes: PartialRouteObject[] = [
   },
   {
     path: 'message',
-    element: <SidebarLayout />,
+    element: <RequireAuth children={<SidebarLayout />} />,
     children: [
       {
         path: '/',

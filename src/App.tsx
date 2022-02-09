@@ -2,18 +2,17 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useRoutes } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { express_path } from 'src/config';
 import { setAccessToken, setUserId } from 'src/utils/accessToken';
-import routes, { notRequireAuth } from './router';
+import routes from './router';
 import ThemeProvider from './theme/ThemeProvider';
 
 const App = () => {
   const content = useRoutes(routes);
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
   const [loading, setLoading] = useState(true);
 
@@ -23,13 +22,7 @@ const App = () => {
       credentials: 'include'
     })
       .then(async (x) => {
-        const { accessToken, userId, ok } = await x.json();
-        console.log(notRequireAuth.includes(pathname));
-        if (!ok && !notRequireAuth.includes(pathname)) {
-          console.log(pathname);
-          setLoading(false);
-          navigate('/');
-        }
+        const { accessToken, userId } = await x.json();
         setAccessToken(accessToken);
         setUserId(userId);
         setLoading(false);
