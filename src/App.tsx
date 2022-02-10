@@ -2,7 +2,7 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useRoutes } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import { express_path } from 'src/config';
@@ -13,26 +13,31 @@ import ThemeProvider from './theme/ThemeProvider';
 const App = () => {
   const content = useRoutes(routes);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log('env', process.env.REACT_APP_TEST);
-    fetch(`${express_path}/refresh_token`, {
-      method: 'POST',
-      credentials: 'include'
-    })
-      .then(async (x) => {
-        const { accessToken, userId } = await x.json();
-        setAccessToken(accessToken);
-        setUserId(userId);
-        setLoading(false);
+    console.log(!['sign_out', '/'].includes(pathname));
+    if (!['sign_out', '/'].includes(pathname)) {
+      fetch(`${express_path}/refresh_token`, {
+        method: 'POST',
+        credentials: 'include'
       })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-        navigate('/');
-      });
+        .then(async (x) => {
+          const { accessToken, userId } = await x.json();
+          setAccessToken(accessToken);
+          setUserId(userId);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setLoading(false);
+          navigate('/');
+        });
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   if (loading) {

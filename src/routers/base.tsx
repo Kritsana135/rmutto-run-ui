@@ -17,6 +17,7 @@ const Verify = Loader(lazy(() => import('src/pages/Verify')));
 const ChangePassword = Loader(lazy(() => import('src/pages/ChangePassword')));
 const LoginAdmin = Loader(lazy(() => import('src/pages/LoginAdmin')));
 const LoginClient = Loader(lazy(() => import('src/pages/LoginClient')));
+const Signout = Loader(lazy(() => import('src/pages/Signout')));
 
 // Status
 const Status404 = Loader(
@@ -44,6 +45,10 @@ export const baseRoute: PartialRouteObject[] = [
       {
         path: 'login',
         element: <Navigate to="/" replace />
+      },
+      {
+        path: 'sign-out',
+        element: <Signout />
       },
       {
         path: 'forgot-password',

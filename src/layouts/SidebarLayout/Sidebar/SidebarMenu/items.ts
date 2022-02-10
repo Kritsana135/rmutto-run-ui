@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 import { isAdmin } from 'src/config';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 export interface MenuItem {
   link?: string;
@@ -13,6 +14,7 @@ export interface MenuItem {
   badge?: string;
   items?: MenuItem[];
   name: string;
+  index: number;
 }
 
 export interface MenuItems {
@@ -24,25 +26,30 @@ const commonMenuItems: MenuItems['items'] = [
   {
     name: 'Account Settings',
     link: '/settings',
-    icon: AccountTreeTwoToneIcon
+    icon: AccountTreeTwoToneIcon,
+    index: 3
   },
   {
     name: 'Leaderboard',
     link: '/leaderboard',
-    icon: MilitaryTechIcon
+    icon: MilitaryTechIcon,
+    index: 1
   },
   {
     name: 'Messenger',
     link: '/message',
-    icon: InboxTwoToneIcon
-  }
+    icon: InboxTwoToneIcon,
+    index: 2
+  },
+  { name: 'Sign Out', link: '/sign-out', icon: ExitToAppIcon, index: 6 }
 ];
 
 const adminMenuItems: MenuItems['items'] = [
   {
     name: 'Progress Approval',
     link: '/progress-approval',
-    icon: PlaylistAddCheckIcon
+    icon: PlaylistAddCheckIcon,
+    index: 4
   }
 ];
 
@@ -50,16 +57,18 @@ const clientMenuItems: MenuItems['items'] = [
   {
     name: 'Profile',
     link: '/profile',
-    icon: AccountCircleTwoToneIcon
+    icon: AccountCircleTwoToneIcon,
+    index: -1
   },
   {
     name: 'Update Progress',
     link: '/progress',
-    icon: UpgradeIcon
+    icon: UpgradeIcon,
+    index: 5
   }
 ];
 
-const menuItems: MenuItems[] = [
+let menuItems: MenuItems[] = [
   {
     heading: '',
     items: [...commonMenuItems]
@@ -71,5 +80,7 @@ if (isAdmin) {
 } else {
   menuItems[0].items.push(...clientMenuItems);
 }
+
+menuItems[0].items.sort((a, b) => a.index - b.index);
 
 export default menuItems;
