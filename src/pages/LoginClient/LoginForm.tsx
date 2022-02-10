@@ -53,7 +53,6 @@ function LoginForm() {
     Login({
       variables: { input },
       onCompleted: (res) => {
-        console.log(res);
         closeLoader();
         if (res.login.code === 'OK') {
           setAccessToken(res.login.payload?.accessToken || '');

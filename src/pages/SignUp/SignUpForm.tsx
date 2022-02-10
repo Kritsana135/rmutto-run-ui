@@ -106,7 +106,7 @@ function SignUpForm() {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Fist name"
+                  label="First name"
                   variant="outlined"
                   type="string"
                   error={!!errors.firstName}
