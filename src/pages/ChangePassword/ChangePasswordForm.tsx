@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router';
 import { useAlertContext } from 'src/contexts/AlertProvider';
 import { useLoaderContext } from 'src/contexts/LoaderProvider';
 import {
+  IChangePassReq,
+  CHANGE_PASS_DOCUMENT
+} from 'src/graphql/auth/changePassword';
+import {
   IResetPassInput,
   RESET_PASS_DOCUMENT
 } from '../../graphql/auth/resetPassword';
@@ -24,14 +28,15 @@ const TypographyH2 = styled(Typography)(
 
 interface ChangePasswordProps {
   token: string;
+  isChangePassword?: boolean;
 }
-
 interface IResetPassForm {
+  oldPassword: string;
   password: string;
   confirmPassword: string;
 }
 
-function ChangePassword({ token }: ChangePasswordProps) {
+function ChangePassword({ token, isChangePassword }: ChangePasswordProps) {
   const {
     handleSubmit,
     control,
@@ -41,6 +46,7 @@ function ChangePassword({ token }: ChangePasswordProps) {
   } = useForm<IResetPassForm>({ defaultValues: defaultForm });
 
   const [ResetPass] = useMutation<any, IResetPassInput>(RESET_PASS_DOCUMENT);
+  const [ChangePass] = useMutation<any, IChangePassReq>(CHANGE_PASS_DOCUMENT);
 
   const navigate = useNavigate();
 
@@ -60,6 +66,34 @@ function ChangePassword({ token }: ChangePasswordProps) {
         closeLoader();
         openAlert({
           message: res.resetPass,
+          severity: 'success',
+          duration: 6000
+        });
+        setTimeout(() => {
+          navigate('/');
+        }, 6000);
+      },
+      onError: (res) => {
+        closeLoader();
+        openAlert({
+          message: res.message,
+          severity: 'error'
+        });
+      }
+    });
+  };
+
+  const onChangePassword = (input: IResetPassForm) => {
+    openLoader();
+    ChangePass({
+      variables: {
+        oldPassword: input.oldPassword,
+        newPassword: input.password
+      },
+      onCompleted: (res) => {
+        closeLoader();
+        openAlert({
+          message: res.changePassword,
           severity: 'success',
           duration: 6000
         });
@@ -109,8 +143,42 @@ function ChangePassword({ token }: ChangePasswordProps) {
           </TypographyH2>
         </Grid>
 
-        <form onSubmit={handleSubmit(onResetPass)}>
+        <form
+          onSubmit={handleSubmit(
+            isChangePassword ? onChangePassword : onResetPass
+          )}
+        >
           <Grid item>
+            {/* old password */}
+            {isChangePassword && (
+              <Controller
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Old Password"
+                    type="password"
+                    variant="outlined"
+                    style={{ marginTop: 9 }}
+                    error={!!errors.oldPassword}
+                    fullWidth
+                    helperText={errors.oldPassword?.message}
+                    inputProps={{
+                      maxLength: 30
+                    }}
+                  />
+                )}
+                name="oldPassword"
+                control={control}
+                rules={{
+                  ...defaultRule,
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters long.'
+                  }
+                }}
+              />
+            )}
+
             {/* password */}
             <Controller
               render={({ field }) => (
@@ -182,7 +250,8 @@ function ChangePassword({ token }: ChangePasswordProps) {
 
 const defaultForm: IResetPassForm = {
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  oldPassword: ''
 };
 
 const defaultRule = {

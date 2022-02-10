@@ -58,6 +58,10 @@ export const baseRoute: PartialRouteObject[] = [
         element: <ChangePassword />
       },
       {
+        path: 'change-password',
+        element: <ChangePassword isChangePassword />
+      },
+      {
         path: 'status',
         children: [
           {

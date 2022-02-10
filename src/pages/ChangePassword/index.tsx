@@ -15,7 +15,11 @@ const OverviewWrapper = styled(Box)(
 `
 );
 
-function Login() {
+interface ChangPasswordProps {
+  isChangePassword?: boolean;
+}
+
+function ChangPassword({ isChangePassword = false }: ChangPasswordProps) {
   const { token } = useParams();
 
   return (
@@ -28,11 +32,11 @@ function Login() {
           <Logo />
         </Box>
         <Card sx={{ p: 5, mb: 10 }}>
-          <ChangePassword token={token} />
+          <ChangePassword token={token} isChangePassword={isChangePassword} />
         </Card>
       </Container>
     </OverviewWrapper>
   );
 }
 
-export default Login;
+export default ChangPassword;
