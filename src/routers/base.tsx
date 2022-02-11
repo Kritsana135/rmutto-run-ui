@@ -1,3 +1,4 @@
+import { element } from 'prop-types';
 import { lazy, Suspense } from 'react';
 import { PartialRouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
@@ -18,6 +19,7 @@ const ChangePassword = Loader(lazy(() => import('src/pages/ChangePassword')));
 const LoginAdmin = Loader(lazy(() => import('src/pages/LoginAdmin')));
 const LoginClient = Loader(lazy(() => import('src/pages/LoginClient')));
 const Signout = Loader(lazy(() => import('src/pages/Signout')));
+const ResendVerify = Loader(lazy(() => import('src/pages/ResendVerify')));
 
 // Status
 const Status404 = Loader(
@@ -49,6 +51,10 @@ export const baseRoute: PartialRouteObject[] = [
       {
         path: 'sign-out',
         element: <Signout />
+      },
+      {
+        path: 'resend-verify',
+        element: <ResendVerify />
       },
       {
         path: 'forgot-password',

@@ -26,7 +26,7 @@ const succesVerify = {
 // TODO: add fail route
 const failVerify = {
   success: false,
-  to: '/somwhere',
+  to: '/resend-verify',
   messageTo: 'ส่งอีเมลยืนยันอีกครั้ง',
   messageStatus: 'ยืนยันอีเมลไม่สำเร็จ'
 };
