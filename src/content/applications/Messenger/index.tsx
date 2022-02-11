@@ -20,6 +20,8 @@ import {
   SEND_MESSAGE_DOCUMENT
 } from '../../../graphql/message/sendMessage';
 import { ChatModel } from '../../../graphql/message/message';
+import { UseFormReset } from 'react-hook-form';
+import { MessageForm } from 'src/content/applications/Messenger/BottomBarContent';
 
 const RootWrapper = styled(Box)(
   () => `
@@ -103,7 +105,10 @@ function ApplicationsMessenger() {
     });
   };
 
-  const handleSendChat = ({ content }: { content: string }) => {
+  const handleSendChat = (
+    { content }: { content: string },
+    reset: UseFormReset<MessageForm>
+  ) => {
     SendMessage({
       variables: {
         input: {
@@ -113,6 +118,9 @@ function ApplicationsMessenger() {
       },
       onCompleted: (res) => {
         setChat((item) => [res.sendMessage, ...item]);
+        reset({
+          content: ''
+        });
       }
     });
   };

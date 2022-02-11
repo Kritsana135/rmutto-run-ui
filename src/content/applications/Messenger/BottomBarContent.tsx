@@ -9,7 +9,7 @@ import {
   TextField
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, UseFormReset } from 'react-hook-form';
 import { getUserId } from '../../../utils/accessToken';
 import { getProfileUrl } from '../../../utils/image';
 
@@ -26,13 +26,17 @@ export interface MessageForm {
 }
 
 interface BottomBarContentProps {
-  handleSendChat: (item: MessageForm) => void;
+  handleSendChat: (item: MessageForm, reset: UseFormReset<MessageForm>) => void;
 }
 
 function BottomBarContent({ handleSendChat }: BottomBarContentProps) {
   const profileImage = getProfileUrl(getUserId());
-  const { control, handleSubmit, watch } = useForm<MessageForm>();
+  const { control, handleSubmit, watch, reset } = useForm<MessageForm>();
 
+  const proxy = (item: MessageForm) => {
+    handleSendChat(item, reset);
+  };
+  
   const disableSend = watch('content') ? false : true;
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
@@ -69,7 +73,7 @@ function BottomBarContent({ handleSendChat }: BottomBarContentProps) {
         variant="contained"
         type="submit"
         disabled={disableSend}
-        onClick={handleSubmit(handleSendChat)}
+        onClick={handleSubmit(proxy)}
       >
         Send
       </Button>
