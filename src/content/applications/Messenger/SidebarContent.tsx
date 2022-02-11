@@ -57,7 +57,7 @@ function SidebarContent({
       const image = getProfileUrl(user.id);
       return (
         <InBoxChat
-          content={lastMessage.content}
+          content={lastMessage?.content}
           fullName={`${user.firstName} ${user.lastName}`}
           image={image}
           key={user.id}

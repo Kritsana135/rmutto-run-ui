@@ -2,19 +2,16 @@ import { useQuery } from '@apollo/client';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import TimerIcon from '@mui/icons-material/Timer';
-import UploadTwoToneIcon from '@mui/icons-material/UploadTwoTone';
 import {
   Avatar,
   Box,
   Card,
   CardHeader,
   Divider,
-  IconButton,
   Typography,
   useTheme
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 import Countdown from 'react-countdown';
 import { IApp, IAppRes } from 'src/graphql/app/createApp';
@@ -63,7 +60,7 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
   const theme = useTheme();
 
   const [app, setApp] = useState<IApp>({
-    endDate: dayjs().add(1, 'year').toDate(),
+    endDate: null,
     eventName: '',
     goalKm: 0,
     startDate: null

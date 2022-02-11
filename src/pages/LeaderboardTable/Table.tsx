@@ -16,17 +16,33 @@ import {
 } from '@mui/material';
 import { ChangeEvent, FC, useState } from 'react';
 import ProgressBar from 'src/components/ProgressBar';
+import { IApp, IAppRes } from 'src/graphql/app/createApp';
+import { APP_DOCUMENT, IAppReq } from 'src/graphql/app/getApp';
 import {
   LeaderboardReq,
   LeaderboardRes,
   LEADERBOARD_DOCUMENT
 } from 'src/graphql/progress/leaderboard';
 import { getProfileUrl } from 'src/utils/image';
+import { eventKey } from '../../config';
 
 const BoardTable: FC = () => {
   const [page, setPage] = useState<number>(0);
   const [perPage, setPerPage] = useState<number>(5);
   const [totalItem, setTotalItem] = useState<number>(0);
+  const [app, setApp] = useState<IApp>({
+    endDate: null,
+    eventName: '',
+    goalKm: 0,
+    startDate: null
+  });
+
+  useQuery<IAppRes, IAppReq>(APP_DOCUMENT, {
+    variables: { eventKey },
+    onCompleted: (res) => {
+      setApp(res.app);
+    }
+  });
 
   const handlePageChange = (event: any, newPage: number): void => {
     setPage(newPage);
@@ -62,7 +78,7 @@ const BoardTable: FC = () => {
           key={id}
           avatarImg={getProfileUrl(id)}
           no={no}
-          progress={(km / 22) * 100}
+          progress={(km / app.goalKm) * 100}
           bio={bio}
         />
       );

@@ -12,6 +12,7 @@ const Loader = (Component) => (props) =>
   );
 
 const ProgressTxtTable = Loader(lazy(() => import('src/pages/ProgressTable')));
+const App = Loader(lazy(() => import('src/pages/App')));
 
 export const adminRoute: PartialRouteObject[] = [
   {
@@ -21,6 +22,16 @@ export const adminRoute: PartialRouteObject[] = [
       {
         path: '/',
         element: <ProgressTxtTable />
+      }
+    ]
+  },
+  {
+    path: 'app',
+    element: <RequireAuth children={<SidebarLayout />} />,
+    children: [
+      {
+        path: '/',
+        element: <App />
       }
     ]
   }

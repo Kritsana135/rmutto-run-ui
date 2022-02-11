@@ -55,6 +55,12 @@ export default function SendNewMessage({
       if (data?.getListOfUser) {
         return data?.getListOfUser.map(({ bio, firstName, lastName, id }) => {
           const image = getProfileUrl(id);
+          console.log({
+            bio,
+            fullName: `${firstName} ${lastName}`,
+            id,
+            image
+          });
           return {
             bio,
             fullName: `${firstName} ${lastName}`,

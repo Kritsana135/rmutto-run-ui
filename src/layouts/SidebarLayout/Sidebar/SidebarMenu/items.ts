@@ -7,6 +7,7 @@ import { isAdmin } from 'src/config';
 import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import UpgradeIcon from '@mui/icons-material/Upgrade';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 export interface MenuItem {
   link?: string;
@@ -49,6 +50,12 @@ const adminMenuItems: MenuItems['items'] = [
     name: 'Progress Approval',
     link: '/progress-approval',
     icon: PlaylistAddCheckIcon,
+    index: 4
+  },
+  {
+    name: 'App',
+    link: '/app',
+    icon: AppRegistrationIcon,
     index: 4
   }
 ];
