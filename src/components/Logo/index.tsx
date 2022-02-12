@@ -111,7 +111,7 @@ function Logo() {
       <Hidden smDown>
         <LogoTextWrapper>
           <Tooltip title="Version 1.1.0" arrow placement="right">
-            <VersionBadge>2021</VersionBadge>
+            <VersionBadge>2022</VersionBadge>
           </Tooltip>
           <LogoText>HUSO RMUTTO RUN</LogoText>
         </LogoTextWrapper>
