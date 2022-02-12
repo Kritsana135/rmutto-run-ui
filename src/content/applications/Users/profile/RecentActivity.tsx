@@ -66,7 +66,10 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
     startDate: null
   });
 
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState({
+    km: 0,
+    no: '-'
+  });
 
   useQuery<IAppRes, IAppReq>(APP_DOCUMENT, {
     variables: { eventKey },
@@ -77,9 +80,20 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
 
   useQuery<IMyProgressRes>(MY_PROGRESS_DOCUMENT, {
     onCompleted: (res) => {
-      setProgress(parseFloat(res?.myProgress?.km) || 0);
+      setProgress({
+        km: parseFloat(res?.myProgress?.km) || 0,
+        no: res.myProgress.no
+      });
     }
   });
+
+  const getRemain = (progress: number, goal: number) => {
+    const result = goal - progress;
+    if (result < 0) {
+      return 0;
+    }
+    return result;
+  };
 
   return (
     <Card>
@@ -109,7 +123,7 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
               >
                 Total
               </Typography>
-              <Typography variant="h2">{user.km}</Typography>
+              <Typography variant="h2">{progress.km}</Typography>
             </Box>
             <Box>
               <Typography
@@ -119,7 +133,9 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
               >
                 remaining
               </Typography>
-              <Typography variant="h2">{app.goalKm}</Typography>
+              <Typography variant="h2">
+                {getRemain(progress.km, app.goalKm)}
+              </Typography>
             </Box>
           </Box>
         </Box>
@@ -134,7 +150,7 @@ const RecentActivity: FC<IUserProps> = ({ user }) => {
 
           <Box pt={2} display="flex">
             <Box>
-              <Typography variant="h1">{progress}</Typography>
+              <Typography variant="h1">{progress.no}</Typography>
             </Box>
           </Box>
         </Box>
