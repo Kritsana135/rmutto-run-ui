@@ -173,23 +173,19 @@ function ApplicationsMessenger() {
             {WrapSideBarContent()}
           </Drawer>
         </Hidden>
-        {chatList.length > 0 ? (
-          <ChatWindow>
-            <ChatTopBar>
-              <TopBarContent userId={selectedChat} fullName={nameChat} />
-            </ChatTopBar>
-            <ChatMain>
-              <Scrollbars ref={ref} autoHide>
-                <ChatContent chatList={chatList} />
-              </Scrollbars>
-            </ChatMain>
-            <ChatBottomBar>
-              <BottomBarContent handleSendChat={handleSendChat} />
-            </ChatBottomBar>
-          </ChatWindow>
-        ) : (
-          <Hidden mdUp>{WrapSideBarContent()}</Hidden>
-        )}
+        <ChatWindow>
+          <ChatTopBar>
+            <TopBarContent userId={selectedChat} fullName={nameChat} />
+          </ChatTopBar>
+          <ChatMain>
+            <Scrollbars ref={ref} autoHide>
+              <ChatContent chatList={chatList} />
+            </Scrollbars>
+          </ChatMain>
+          <ChatBottomBar>
+            <BottomBarContent handleSendChat={handleSendChat} />
+          </ChatBottomBar>
+        </ChatWindow>
       </RootWrapper>
     </>
   );
