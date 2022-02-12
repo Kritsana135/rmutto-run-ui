@@ -121,7 +121,7 @@ const ProfileCover: FC<IUserProps> = ({ user }) => {
         </Box>
       </Box>
       <CardCover>
-        <CardMedia image="https://www.coverphotosforfb.com/files/covers/2069-run-motivation.jpg" />
+        <CardMedia image="static/images/cover.jpg" />
       </CardCover>
       <AvatarWrapper>
         <Avatar
